@@ -15,7 +15,7 @@ class ChatPage extends StatelessWidget {
   final TextEditingController messageController = TextEditingController();
 
   void sendMessage() async {
-    if (messageController.text.isEmpty) {
+    if (messageController.text.isNotEmpty) {
       await chatService.sendMessage(receiverID, messageController.text);
 
       messageController.clear();
@@ -47,7 +47,29 @@ class ChatPage extends StatelessWidget {
   Widget _buildMessageItem(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
-    return Text(data["message"]);
+    bool isCurrentUser = data['senderID'] == authService.getCurrentUser()!.uid;
+
+    var alignment = isCurrentUser
+        ? Alignment.centerRight
+        : Alignment.centerLeft;
+
+    return Container(
+      alignment: alignment,
+      decoration: BoxDecoration(
+        color: Colors.grey[500],
+        borderRadius: BorderRadius.circular(20),
+      ),
+      margin: EdgeInsets.only(top: 8, right: 8, left: 8),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: isCurrentUser
+              ? CrossAxisAlignment.end
+              : CrossAxisAlignment.start,
+          children: [Text(data["message"])],
+        ),
+      ),
+    );
   }
 
   Widget _buildUserInput() {
@@ -59,6 +81,11 @@ class ChatPage extends StatelessWidget {
             obscureText: false,
             controller: messageController,
           ),
+        ),
+
+        IconButton(
+          onPressed: sendMessage,
+          icon: Icon(Icons.arrow_upward_rounded),
         ),
       ],
     );

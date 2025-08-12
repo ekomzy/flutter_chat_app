@@ -21,8 +21,8 @@ class ChatService {
     final Timestamp timestamp = Timestamp.now();
 
     Message newMessage = Message(
-      senderID: currentUserEmail,
-      senderEmail: currentUserID,
+      senderID: currentUserID,
+      senderEmail: currentUserEmail,
       receiverID: receiverID,
       message: message,
       timestamp: timestamp,
@@ -35,7 +35,7 @@ class ChatService {
     await firestore
         .collection("chat_rooms")
         .doc(chatRoomID)
-        .collection("message")
+        .collection("messages")
         .add(newMessage.toMap());
   }
 
@@ -47,8 +47,8 @@ class ChatService {
     return firestore
         .collection("chat_rooms")
         .doc(chatRoomID)
-        .collection("message")
-        .orderBy("timestamp")
+        .collection("messages")
+        .orderBy("timestamp", descending: false)
         .snapshots();
   }
 }

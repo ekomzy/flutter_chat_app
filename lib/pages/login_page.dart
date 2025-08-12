@@ -14,6 +14,13 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool isPasswordVisible = true;
+
+  void togglePasswordVisibility() {
+    setState(() {
+      isPasswordVisible = !isPasswordVisible;
+    });
+  }
 
   @override
   void dispose() {
@@ -69,10 +76,46 @@ class _LoginPageState extends State<LoginPage> {
 
         const SizedBox(height: 20),
 
-        MyInputField(
-          hintText: "Password",
-          controller: passwordController,
-          obscureText: true,
+        // MyInputField(
+        //   hintText: "Password",
+        //   controller: passwordController,
+        //   obscureText: true,
+        // ),
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 25),
+          child: TextField(
+            controller: passwordController,
+            obscureText: isPasswordVisible,
+            autofillHints: [AutofillHints.password],
+            keyboardType: TextInputType.visiblePassword,
+            decoration: InputDecoration(
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.tertiary,
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              fillColor: Colors.white,
+              filled: true,
+              hintText: "Password",
+              hintStyle: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              suffixIcon: IconButton(
+                onPressed: togglePasswordVisibility,
+                icon: Icon(
+                  isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                ),
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+            ),
+          ),
         ),
 
         const SizedBox(height: 10),
